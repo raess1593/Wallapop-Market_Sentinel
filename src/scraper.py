@@ -30,6 +30,9 @@ class WallapopScraper:
         self.driver = uc.Chrome(options=self.options, version_main=self.main_version)
         self.wait = WebDriverWait(self.driver, 12)
 
+        # Data
+        self.data = []
+
     # Navigate to the page
     def fetch_page(self, url):
         # Ensure page loaded correctly
@@ -41,6 +44,28 @@ class WallapopScraper:
         except Exception as e:
             print(f"Error loading page: {e}")
     
+    # Find and save products main info
+    def get_page_articles(self):
+        self.load_more()
+
+        product_grid = self.driver.find_elements(By.CSS_SELECTOR, "div[class*='ItemCard__content']")
+        
+        for p in product_grid:
+            product_name = p.find_element(By.CSS_SELECTOR, "h3[class*='ItemCard__title']").text
+            price =  p.find_element(By.CSS_SELECTOR, "[aria-label='Item price']").text
+            self.data.append({
+                "product_name": product_name,
+                "price": price
+            })
+
+    # Click "Load more" button
+    def load_more(self):
+        try:
+            next_button = self.wait.until(ec.element_to_be_clickable((By.CSS_SELECTOR, "span[part='button-next']")))
+            next_button.click()
+        except:
+            return
+
     # Close page
     def close(self):
         if self.driver:
