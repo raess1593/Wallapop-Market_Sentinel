@@ -1,0 +1,6 @@
+pandas
+selenium
+deep-translator
+seaborn
+matplotlib
+notebook
