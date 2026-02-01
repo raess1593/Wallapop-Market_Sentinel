@@ -12,8 +12,6 @@ from bs4 import BeautifulSoup as bs
 import time
 import random
 
-import pandas as pd
-
 class WallapopScraper:
     def __init__(self):
         # Configure undetected options
@@ -23,7 +21,9 @@ class WallapopScraper:
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36"
         ]
         self.options.add_argument(f"--user-agent={random.choice(user_agents)}")
-        
+        self.options.add_argument('--disable-features=Translate')
+        self.options.add_argument('--lang=es-ES')
+
         # Initialize driver
         version = OperationSystemManager().get_browser_version_from_os(ChromeType.GOOGLE)
         self.main_version = int(version.split('.')[0])
@@ -71,7 +71,7 @@ class WallapopScraper:
             if scroll_counter > 3:
                 break
         
-        self.save_to_data(products_loaded)
+        self.save_to_data(products_loaded[:n])
 
     # Click "Load more" button
     def load_more(self):
@@ -105,7 +105,7 @@ class WallapopScraper:
             return True
         except:
             return False
-        
+
     # Close page
     def close(self):
         if self.driver:
