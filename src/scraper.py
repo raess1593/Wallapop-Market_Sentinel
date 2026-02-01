@@ -45,12 +45,33 @@ class WallapopScraper:
             print(f"Error loading page: {e}")
     
     # Find and save products main info
-    def get_page_articles(self):
-        self.load_more()
+    def get_page_articles(self, n=200):
+        try:
+            self.load_more()
+        except:
+            pass
 
-        product_grid = self.driver.find_elements(By.CSS_SELECTOR, "div[class*='ItemCard__content']")
+        # Load n products
+        products_loaded = []
+        scroll_counter = 0
+        pixels = random.uniform(2000, 4000)
+
+        while len(products_loaded) < n:
+            current_count = len(products_loaded)
+            self.driver.execute_script(f"window.scrollBy(0, {pixels});")
+            time.sleep(random.uniform(2, 4))
+
+            products_loaded = self.driver.find_elements(By.CSS_SELECTOR, "div[class*='ItemCard__content']")
+            
+            # Break loop if no more articles are detected
+            if len(products_loaded) == current_count:
+                scroll_counter += 1
+            else:
+                scroll_counter = 0
+            if scroll_counter > 3:
+                break
         
-        for p in product_grid:
+        for p in products_loaded:
             product_name = p.find_element(By.CSS_SELECTOR, "h3[class*='ItemCard__title']").text
             price =  p.find_element(By.CSS_SELECTOR, "[aria-label='Item price']").text
             self.data.append({
@@ -60,12 +81,17 @@ class WallapopScraper:
 
     # Click "Load more" button
     def load_more(self):
-        try:
-            next_button = self.wait.until(ec.element_to_be_clickable((By.CSS_SELECTOR, "span[part='button-next']")))
-            next_button.click()
-        except:
-            return
+        host_selector = self.wait.until(ec.presence_of_element_located((By.CSS_SELECTOR, "div[class*='loadMore']")))
 
+        shadow_host = host_selector.find_element(By.CSS_SELECTOR, "walla-button")
+
+        shadow_root = shadow_host.shadow_root
+        button = shadow_root.find_element(By.CSS_SELECTOR, "button")
+        
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", button)
+        time.sleep(random.uniform(1, 2))
+        self.driver.execute_script("arguments[0].click();", button)
+        
     # Close page
     def close(self):
         if self.driver:
