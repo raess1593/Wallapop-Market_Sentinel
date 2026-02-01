@@ -23,6 +23,7 @@ class WallapopScraper:
         self.options.add_argument(f"--user-agent={random.choice(user_agents)}")
         self.options.add_argument('--disable-features=Translate')
         self.options.add_argument('--lang=es-ES')
+        self.options.add_argument('--headless=new')
 
         # Initialize driver
         version = OperationSystemManager().get_browser_version_from_os(ChromeType.GOOGLE)
