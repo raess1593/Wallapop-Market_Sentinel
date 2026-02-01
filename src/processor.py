@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from deep_translator import GoogleTranslator
+from pathlib import Path
 
 class DataProcessor:
     def __init__(self, df):
@@ -39,3 +40,11 @@ class DataProcessor:
                         .str.strip())
         
         self.df['price'] = pd.to_numeric(self.df['price'], errors='coerce').dropna()
+
+    def save_to_csv(self, keyword='nike'):
+        kw = keyword.strip().replace(" ", "_")
+        file_name = kw + ".csv"
+
+        base_dir = Path(__file__).parent.parent
+        file_path = base_dir / "data" / file_name
+        self.df.to_csv(file_path, index=False)
