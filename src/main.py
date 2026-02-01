@@ -21,10 +21,10 @@ if __name__ == "__main__":
     # Get data
     scraper.get_page_articles(args.limit)
     raw_data = scraper.data
+    scraper.close()
 
     # Convert data to a clean dataframe
     df_object = DataProcessor(raw_data)
     df = df_object.clean()
     print(df)
-
-    scraper.close()
+    df_object.save_to_csv(args.search.lower())
