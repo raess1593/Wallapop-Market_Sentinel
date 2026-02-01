@@ -2,6 +2,16 @@
 
 An automated Data Engineering pipeline designed to scrape, process, and analyze real-time market data from Wallapop. This tool allows users to track price trends, identify market opportunities, and perform statistical analysis on any product category with a single command. In addition, it is included a real-world analysis searching for Nike products.
 
+## 📊 Market Insights at a Glance
+<a href="analysis.ipynb">
+  <img src="output/price_density.png" alt="Market Analysis" width="550">
+</a>
+<a href="analysis.ipynb">
+  <img src="output/outstanding_vs_standard.png" alt="Market Analysis" width="475">
+</a>
+
+*Click the images to explore the full interactive analysis in the Jupyter Notebook.*
+
 ## 🌟 Key Features
 * **Dynamic Scraping:** Fully customizable search keywords and item limits via CLI arguments.
 * **Shadow DOM Interaction:** Advanced Selenium implementation to handle modern web components and dynamic loading.
